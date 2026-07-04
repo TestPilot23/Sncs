@@ -1,0 +1,8 @@
+services:
+  sncs:
+    build: .
+    image: sncs:latest
+    container_name: sncs
+    restart: unless-stopped
+    ports:
+      - '8087:80'

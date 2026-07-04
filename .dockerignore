@@ -1,0 +1,11 @@
+node_modules
+dist
+.git
+*.md
+plan
+docs
+tests
+.prettierrc.json
+.oxlintrc.json
+compose.yaml
+Dockerfile

@@ -19,5 +19,6 @@ production Vite + React + TS static site.
 
 - [ ] Real gallery photos to replace striped placeholders
 - [ ] Contact form backend (email or quote-intake endpoint)
+- [x] Dockerize (multi-stage build → nginx:alpine, compose on port 8087)
 - [ ] Deploy target + CI (static hosting)
 - [ ] Self-host fonts if we want to drop the Google Fonts CDN

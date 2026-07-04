@@ -17,6 +17,8 @@ screen printing, digitizing, heat transfers). Ported from the claude.ai/design p
 - `npm test` — full regression suite
 - `npm run build` — typecheck + production build to `dist/`
 - `npm run preview` — serve the production build
+- `docker compose up -d --build` — build + host the site in nginx on port 8087 (multi-stage
+  `Dockerfile`; nginx config in `docker/nginx.conf`)
 
 ## Layout
 
