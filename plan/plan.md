@@ -20,5 +20,8 @@ production Vite + React + TS static site.
 - [ ] Real gallery photos to replace striped placeholders
 - [ ] Contact form backend (email or quote-intake endpoint)
 - [x] Dockerize (multi-stage build → nginx:alpine, compose on port 8087)
-- [ ] Deploy target + CI (static hosting)
+- [x] Deploy to Forky (2026-07-03): replaced Sncs WordPress stack; Traefik routes
+      stitchesncolorstudio.com → Sncs-Web container; WP DB dumped to
+      `~/docker/websites/Sncs/wordpress-backup/`, all old data/volumes retained
+- [ ] CI to rebuild/redeploy image on release
 - [ ] Self-host fonts if we want to drop the Google Fonts CDN
