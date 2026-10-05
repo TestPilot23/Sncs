@@ -57,7 +57,7 @@ before each commit. Check in with the user at the end of each phase.
 - [ ] 4.3 Terraform: SNS topic + owner subscription, alarms for Lambda errors, API 5xx, SES bounce rate
 - [ ] 4.4 Terraform: Cloudflare Managed Ruleset, rate-limit rule, scanner-path rule, `www` redirect,
       Full (strict); document any rule the free plan cannot manage, with a verification command
-- [ ] 4.5 Operator sets the Turnstile secret with `aws ssm put-parameter`; confirm it is absent from state
+- [x] 4.5 (done 2026-10-05 after the Phase 3 apply: version 2, length verified, not in state) Operator sets the Turnstile secret with `aws ssm put-parameter`; confirm it is absent from state
 - [ ] 4.6 Apply; verify DKIM and MAIL FROM report SUCCESS; confirm the SES production request is granted
 - [ ] 4.7 SES mailbox-simulator sends (`success@`, `bounce@`, `complaint@`) through the handler path
 - [ ] 4.8 One real submission through the CloudFront domain; confirm owner mail and customer auto-reply
