@@ -11,7 +11,7 @@ before each commit. Check in with the user at the end of each phase.
       and record how apex traffic reaches Forky today; save the output to `plan/dns-baseline.md`
 - [ ] 1.4 User files the SES production-access request in `us-east-1` (use case: transactional replies to
       a website quote form) and verifies the owner address meanwhile
-- [ ] 1.5 User creates a scoped Cloudflare API token (Zone DNS edit, Zone Rulesets edit, this zone only)
+- [x] 1.5 (Cloudflare token done and verified 2026-10-05: one zone only, DNS+WAF+Settings+Single Redirect Edit; Turnstile widget still pending) User creates a scoped Cloudflare API token (Zone DNS edit, Zone Rulesets edit, this zone only)
       and a Turnstile widget; token goes in git-ignored `infrastructure/.env`
 - [ ] 1.6 Record the baseline cache-header behavior of the live Forky site for parity checks later
 
