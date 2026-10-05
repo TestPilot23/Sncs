@@ -200,3 +200,5 @@ export const FAQS: ReadonlyArray<[string, string]> = [
     'It depends on the size and service, but most orders are ready within 1–2 weeks. Need it sooner? Ask us about your timeline and we’ll do our best.',
   ],
 ];
+
+export const SHOP_PHONE = { display: '(314) 921-7075', tel: '13149217075' } as const;
