@@ -3,6 +3,7 @@
 
 mock_provider "aws" {}
 mock_provider "cloudflare" {}
+mock_provider "archive" {}
 
 override_resource {
   target          = aws_cloudfront_distribution.site
@@ -94,8 +95,8 @@ run "distribution_uses_oac_https_and_no_waf" {
   }
 
   assert {
-    condition     = alltrue([for o in aws_cloudfront_distribution.site.origin : o.origin_access_control_id != null && length(o.s3_origin_config) == 0])
-    error_message = "Origins must use OAC, not the legacy origin access identity."
+    condition     = alltrue([for o in aws_cloudfront_distribution.site.origin : length(o.custom_origin_config) > 0 || (o.origin_access_control_id != null && length(o.s3_origin_config) == 0)])
+    error_message = "S3 origins must use OAC, not the legacy origin access identity."
   }
 
   assert {

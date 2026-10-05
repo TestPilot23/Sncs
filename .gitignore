@@ -31,3 +31,5 @@ infrastructure/terraform/**/*.tfstate.*
 infrastructure/terraform/**/*.tfplan
 infrastructure/terraform/**/backend.hcl
 infrastructure/terraform/**/crash.log
+lambda/contact/dist/
+infrastructure/terraform/**/.build/

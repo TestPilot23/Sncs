@@ -1,3 +1,13 @@
+locals {
+  # AWS-managed CloudFront policies. The ids are fixed and published by AWS (verified with
+  # `aws cloudfront get-cache-policy` / `get-origin-request-policy`).
+  # Managed-CachingDisabled
+  cache_policy_caching_disabled = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
+  # Managed-AllViewerExceptHostHeader: forwards the viewer's headers (content-type, cf-connecting-ip)
+  # but not Host, which API Gateway needs to be its own.
+  origin_request_policy_all_viewer_except_host = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
+}
+
 resource "aws_cloudfront_origin_access_control" "site" {
   name                              = "sncs-site"
   description                       = "Signs CloudFront requests to the private site bucket."
@@ -75,6 +85,31 @@ resource "aws_cloudfront_distribution" "site" {
     domain_name              = aws_s3_bucket.site.bucket_regional_domain_name
     origin_id                = "site-bucket"
     origin_access_control_id = aws_cloudfront_origin_access_control.site.id
+  }
+
+  origin {
+    domain_name = replace(aws_apigatewayv2_api.contact.api_endpoint, "https://", "")
+    origin_id   = "contact-api"
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
+  # Same origin as the site, so the browser needs no CORS. No SPA fallback and no caching here.
+  ordered_cache_behavior {
+    path_pattern               = "/api/*"
+    target_origin_id           = "contact-api"
+    viewer_protocol_policy     = "redirect-to-https"
+    allowed_methods            = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods             = ["GET", "HEAD"]
+    compress                   = false
+    cache_policy_id            = local.cache_policy_caching_disabled
+    origin_request_policy_id   = local.origin_request_policy_all_viewer_except_host
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.site.id
   }
 
   default_cache_behavior {

@@ -6,6 +6,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 6.0"
     }
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.0"
+    }
     # Reads CLOUDFLARE_API_TOKEN from the environment: no credentials in HCL, tfvars or state.
     cloudflare = {
       source  = "cloudflare/cloudflare"
