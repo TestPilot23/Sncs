@@ -50,16 +50,16 @@ before each commit. Check in with the user at the end of each phase.
 
 ## 4. Phase 4 — Email identity, alarms and Cloudflare
 
-- [x] 4.1 (written and tested; not yet applied) Terraform: SES domain identity, Easy DKIM, custom MAIL FROM on `bounce.` (not `mail.`, which is a Google CNAME), configuration set, with all
+- [x] 4.1 (applied 2026-10-05) Terraform: SES domain identity, Easy DKIM, custom MAIL FROM on `bounce.` (not `mail.`, which is a Google CNAME), configuration set, with all
       records created in the Cloudflare zone (DNS-only); confirm the plan changes no apex MX/TXT
-- [x] 4.2 (written and tested; not yet applied) Terraform: ACM certificate with Cloudflare validation records; attach the alias only after
+- [x] 4.2 (applied 2026-10-05, cert ISSUED, alias attached) Terraform: ACM certificate with Cloudflare validation records; attach the alias only after
       issuance; do not create the apex record yet
-- [x] 4.3 (written and tested; not yet applied) Terraform: SNS topic + owner subscription, alarms for Lambda errors, API 5xx, SES bounce rate
-- [x] 4.4 (written and tested; not yet applied) Terraform: Cloudflare Managed Ruleset, rate-limit rule, scanner-path rule, `www` redirect,
+- [x] 4.3 (applied; SNS email subscription awaiting the owner confirmation click) Terraform: SNS topic + owner subscription, alarms for Lambda errors, API 5xx, SES bounce rate
+- [x] 4.4 (applied and live-verified: www 301, scanner paths 403, US-only rule kept) Terraform: Cloudflare Managed Ruleset, rate-limit rule, scanner-path rule, `www` redirect,
       Full (strict); document any rule the free plan cannot manage, with a verification command
 - [x] 4.5 (done 2026-10-05 after the Phase 3 apply: version 2, length verified, not in state) Operator sets the Turnstile secret with `aws ssm put-parameter`; confirm it is absent from state
-- [ ] 4.6 Apply; verify DKIM and MAIL FROM report SUCCESS; confirm the SES production request is granted
-- [ ] 4.7 SES mailbox-simulator sends (`success@`, `bounce@`, `complaint@`) through the handler path
+- [ ] 4.6 (DKIM and MAIL FROM verified SUCCESS 2026-10-05; SES production access still PENDING) Apply; verify DKIM and MAIL FROM report SUCCESS; confirm the SES production request is granted
+- [x] 4.7 (done 2026-10-05, all three simulator sends accepted) SES mailbox-simulator sends (`success@`, `bounce@`, `complaint@`) through the handler path
 - [ ] 4.8 One real submission through the CloudFront domain; confirm owner mail and customer auto-reply
       both arrive and render correctly
 
