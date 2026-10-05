@@ -47,8 +47,9 @@ Parity with `docker/nginx.conf`:
 - Hashed `/assets/index-*` → `Cache-Control: public, max-age=31536000, immutable`.
 - Unhashed brand images under `/assets/` → `max-age=86400`.
 - `index.html` → `no-cache`.
-- Unknown paths → `/index.html` (CloudFront custom error response for 403/404, status 200). Routing is
-  hash-based so this is only a safety net for stray deep links.
+- Extensionless paths → `/index.html` through a CloudFront Function on the site behavior (not distribution-wide
+  custom error responses, which would also rewrite `/api/*` errors into `index.html`). Routing is hash-based, so
+  this is only a safety net for stray deep links. A missing file with an extension stays an error.
 
 Cache headers are set as object metadata at upload time (two `s3 sync` passes with different
 `--cache-control`), not in CloudFront, so S3 is the single source of truth and the behavior is testable

@@ -42,15 +42,23 @@ Objects SHALL carry `Cache-Control` set at upload time: hashed build files under
 - **WHEN** a client requests an unhashed image under `/assets/`
 - **THEN** the response `Cache-Control` is `public, max-age=86400`
 
-### Requirement: Unknown Paths Fall Back to the Entry Document
+### Requirement: Client-Side Paths Fall Back to the Entry Document
 
-Requests for paths that match no object SHALL return `index.html` with status 200, so a stray deep link
-does not show an S3 error page.
+Requests whose last path segment has no file extension SHALL return `index.html` with status 200, through
+a CloudFront Function on the site behavior only, so a stray deep link does not show an S3 error page. A
+request for a missing file that has an extension SHALL NOT be rewritten, and `/api` paths SHALL never be
+rewritten. The distribution SHALL NOT define distribution-wide custom error responses, because those apply
+to every behavior and would turn API errors into `index.html`.
 
 #### Scenario: Deep path
 
 - **WHEN** a client requests `/some/deep/path`
 - **THEN** it receives `index.html` with status 200
+
+#### Scenario: Missing file stays a failure
+
+- **WHEN** a client requests `/assets/missing.png` and no such object exists
+- **THEN** it does not receive `index.html` with status 200
 
 #### Scenario: API paths are not masked
 
