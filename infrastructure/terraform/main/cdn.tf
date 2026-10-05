@@ -133,8 +133,13 @@ resource "aws_cloudfront_distribution" "site" {
     }
   }
 
-  # The custom domain and ACM certificate arrive with the Cloudflare/domain work (Phase 4).
+  aliases = [var.domain]
+
+  # Referencing the validation resource means the alias is only attached once the certificate has
+  # been issued.
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = aws_acm_certificate_validation.site.certificate_arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 }

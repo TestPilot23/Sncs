@@ -14,4 +14,18 @@ if ! awk '/resource "aws_ssm_parameter" "turnstile_secret"/,/^}/' main/api.tf | 
   exit 1
 fi
 
+# The certificate covers only the apex. www is redirected by Cloudflare, which serves its own
+# certificate there, so no SAN (and no wildcard) belongs on the CloudFront certificate.
+if grep -n 'subject_alternative_names' main/*.tf; then
+  echo "FAIL: the ACM certificate must not declare subject_alternative_names." >&2
+  exit 1
+fi
+
+# The apex is the one record an operator replaces at cutover; Terraform must never manage it
+# (as A/AAAA/CNAME, or as MX/TXT, which Google Workspace owns).
+if grep -nE '^[[:space:]]*name[[:space:]]*=[[:space:]]*(var\.domain|"@")[[:space:]]*$' main/*.tf; then
+  echo "FAIL: a DNS record is declared on the bare apex. Only an operator replaces the apex record, at cutover." >&2
+  exit 1
+fi
+
 echo "static checks passed"

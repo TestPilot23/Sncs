@@ -34,3 +34,9 @@ variable "contact_reserved_concurrency" {
   default     = -1
 }
 
+
+variable "alert_email" {
+  type        = string
+  description = "Receives CloudWatch alarm emails (contact errors, API 5xx, SES bounce rate). SNS emails a confirmation link that must be clicked once."
+  default     = "quotes@stitchesncolorstudio.com"
+}

@@ -50,12 +50,12 @@ before each commit. Check in with the user at the end of each phase.
 
 ## 4. Phase 4 — Email identity, alarms and Cloudflare
 
-- [ ] 4.1 Terraform: SES domain identity, Easy DKIM, custom MAIL FROM on `bounce.` (not `mail.`, which is a Google CNAME), configuration set, with all
+- [x] 4.1 (written and tested; not yet applied) Terraform: SES domain identity, Easy DKIM, custom MAIL FROM on `bounce.` (not `mail.`, which is a Google CNAME), configuration set, with all
       records created in the Cloudflare zone (DNS-only); confirm the plan changes no apex MX/TXT
-- [ ] 4.2 Terraform: ACM certificate with Cloudflare validation records; attach the alias only after
+- [x] 4.2 (written and tested; not yet applied) Terraform: ACM certificate with Cloudflare validation records; attach the alias only after
       issuance; do not create the apex record yet
-- [ ] 4.3 Terraform: SNS topic + owner subscription, alarms for Lambda errors, API 5xx, SES bounce rate
-- [ ] 4.4 Terraform: Cloudflare Managed Ruleset, rate-limit rule, scanner-path rule, `www` redirect,
+- [x] 4.3 (written and tested; not yet applied) Terraform: SNS topic + owner subscription, alarms for Lambda errors, API 5xx, SES bounce rate
+- [x] 4.4 (written and tested; not yet applied) Terraform: Cloudflare Managed Ruleset, rate-limit rule, scanner-path rule, `www` redirect,
       Full (strict); document any rule the free plan cannot manage, with a verification command
 - [x] 4.5 (done 2026-10-05 after the Phase 3 apply: version 2, length verified, not in state) Operator sets the Turnstile secret with `aws ssm put-parameter`; confirm it is absent from state
 - [ ] 4.6 Apply; verify DKIM and MAIL FROM report SUCCESS; confirm the SES production request is granted

@@ -22,6 +22,13 @@ override_resource {
 }
 
 override_data {
+  target = data.cloudflare_zone.site
+  values = {
+    id = "0123456789abcdef0123456789abcdef"
+  }
+}
+
+override_data {
   target = data.aws_caller_identity.current
   values = {
     account_id = "123456789012"

@@ -61,6 +61,23 @@ cannot be SHALL be listed with a verification command in the repository docs.
 - **WHEN** one client sends more than 100 matching requests within 10 seconds
 - **THEN** further requests receive 429 for the mitigation window
 
+### Requirement: Existing Zone Rules Are Preserved
+
+Rules that already protect the zone SHALL be adopted into Terraform state, not replaced. In particular the
+active custom rule that blocks all traffic from outside the US (`ip.geoip.country ne "US"`) SHALL remain
+enabled, with the same expression and action, alongside the new rules. A ruleset resource replaces every
+rule in its phase, so an existing entrypoint SHALL be imported before the first apply.
+
+#### Scenario: US-only block survives
+
+- **WHEN** Terraform is applied to the zone
+- **THEN** a visitor from outside the US is still blocked
+
+#### Scenario: Existing ruleset is imported first
+
+- **WHEN** the zone already has a custom firewall ruleset
+- **THEN** it is imported into state before the plan, and the plan changes it in place rather than creating a second one
+
 ### Requirement: Existing Mail DNS Is Never Modified
 
 Terraform SHALL NOT create, change or delete the apex `MX` or apex `TXT` (SPF) records, and SHALL import
