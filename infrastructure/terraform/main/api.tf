@@ -73,7 +73,7 @@ resource "aws_iam_role_policy" "contact" {
 # Built by `npm run build:lambda` (CI builds before planning).
 data "archive_file" "contact" {
   type        = "zip"
-  source_file = "${path.module}/../../../lambda/contact/dist/index.mjs"
+  source_file = "${path.module}/../../../lambda/contact/dist/index.cjs"
   output_path = "${path.module}/.build/contact.zip"
 }
 

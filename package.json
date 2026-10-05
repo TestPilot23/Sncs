@@ -11,7 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write .",
-    "build:lambda": "esbuild lambda/contact/src/index.ts --bundle --platform=node --target=node26 --format=esm --minify --outfile=lambda/contact/dist/index.mjs"
+    "build:lambda": "esbuild lambda/contact/src/index.ts --bundle --platform=node --target=node24 --format=cjs --minify --outfile=lambda/contact/dist/index.cjs"
   },
   "dependencies": {
     "react": "^19.3.0",
