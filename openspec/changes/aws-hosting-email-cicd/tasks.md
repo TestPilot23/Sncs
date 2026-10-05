@@ -25,9 +25,9 @@ before each commit. Check in with the user at the end of each phase.
 - [x] 2.4 Main root: private S3 bucket with versioning and 30-day noncurrent expiry, OAC, CloudFront
       distribution, SPA-fallback CloudFront Function (not custom error responses), response headers policy
 - [ ] 2.5 `terraform fmt`, `validate` clean (done); `tflint` not installed yet; commit
-- [x] 2.6 (bootstrap applied 2026-10-05, 12 resources, state migrated; main root apply still pending) Operator applies bootstrap with admin credentials; main root applied with a saved plan after
+- [x] 2.6 (bootstrap and main root applied 2026-10-05, 12 resources each, 0 destroyed; main at duvf4vsqh9386.cloudfront.net) Operator applies bootstrap with admin credentials; main root applied with a saved plan after
       reviewing it; confirm `0 to destroy`
-- [ ] 2.7 Upload a build manually once and verify on the CloudFront domain: `/`, deep path, cache headers
+- [x] 2.7 (verified 2026-10-05: / and deep path 200, immutable/no-cache/86400 headers, security headers, 301 to HTTPS, br+gzip, missing file 403, direct S3 403) Upload a build manually once and verify on the CloudFront domain: `/`, deep path, cache headers
 
 **Check in with user before Phase 3.**
 
