@@ -33,18 +33,18 @@ before each commit. Check in with the user at the end of each phase.
 
 ## 3. Phase 3 — Contact backend (test-driven)
 
-- [ ] 3.1 Shared request type and field limits file imported by form and handler by relative path
-- [ ] 3.2 Write handler tests first: validation matrix, oversize body, wrong content type, Turnstile
+- [x] 3.1 Shared request type and field limits file imported by form and handler by relative path
+- [x] 3.2 Write handler tests first: validation matrix, oversize body, wrong content type, Turnstile
       missing/invalid, honeypot, owner-send failure → 502 and no auto-reply, auto-reply failure → 200,
       CR/LF header injection, HTML escaping, auto-reply contains no free text, logs contain no PII
-- [ ] 3.2a Assert against the composed raw message, not SDK call counts
-- [ ] 3.3 Implement `lambda/contact/` (TypeScript, esbuild bundle, arm64) until tests pass
-- [ ] 3.4 Contract test: form validator and handler validator agree on a shared sample set
-- [ ] 3.5 Write form tests first (stubbed `fetch`): success, 400 field errors, 502 with tap-to-call phone
+- [x] 3.2a Assert against the composed raw message, not SDK call counts
+- [x] 3.3 Implement `lambda/contact/` (TypeScript, esbuild bundle, arm64) until tests pass
+- [x] 3.4 Contract test: form validator and handler validator agree on a shared sample set
+- [x] 3.5 Write form tests first (stubbed `fetch`): success, 400 field errors, 502 with tap-to-call phone
       link, network failure, double submit, Turnstile token missing, input preserved on failure
-- [ ] 3.6 Implement `Contact.tsx` changes: real submit, loading state, Turnstile widget, honeypot input,
+- [x] 3.6 Implement `Contact.tsx` changes: real submit, loading state, Turnstile widget, honeypot input,
       remove the "demo form" disclaimer; keep Material 3 styling and the existing look
-- [ ] 3.7 Terraform: HTTP API, Lambda (reserved concurrency, log retention), `/api/*` CloudFront behavior,
+- [x] 3.7 Terraform: HTTP API, Lambda (reserved concurrency only when the quota allows; account limit is 10 so it is unset, log retention), `/api/*` CloudFront behavior,
       stage throttling, SSM parameter with placeholder value and `ignore_changes`
 - [ ] 3.8 `npm run lint`, format, full test suite, build; commit
 

@@ -92,9 +92,9 @@ irrelevant here, and avoids that failure mode.
 - Language: TypeScript. The request type and field limits live in one file imported by both the React
   form and the handler by relative path (no package; Coding Defaults). This is the only code shared and
   it prevents the client and server validators drifting.
-- Controls: API Gateway stage throttling (low steady rate, small burst), Lambda reserved concurrency
-  capped (for example 5) so a flood cannot starve other functions or run up cost, request body size
-  cap, and `Content-Type: application/json` required.
+- Controls: API Gateway stage throttling (low steady rate, small burst), a Lambda reserved-concurrency cap where the quota
+  allows (this account's limit is 10, and AWS requires 10 to stay unreserved, so a cap is impossible until
+  the quota is raised; throttling alone bounds concurrency meanwhile), request body size cap, and `Content-Type: application/json` required.
 - Turnstile: the browser sends the Cloudflare Turnstile token; the handler verifies it server-side before
   doing anything else. Plus a honeypot field (hidden input; a filled value returns a fake success and
   sends nothing). Turnstile is free and invisible/managed; the honeypot costs nothing and catches

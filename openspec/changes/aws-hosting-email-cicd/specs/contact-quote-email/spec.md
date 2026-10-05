@@ -59,8 +59,8 @@ the offending fields.
 
 The handler SHALL verify the Cloudflare Turnstile token server-side and reject a missing or invalid token
 with 400 before sending anything. A request whose hidden honeypot field is non-empty SHALL receive a 200
-success response and send no mail. API Gateway stage throttling and a reserved-concurrency cap on the
-function SHALL bound request volume.
+success response and send no mail. API Gateway stage throttling SHALL bound request volume. The function SHALL also have a
+reserved-concurrency cap whenever the account's Lambda quota allows one.
 
 #### Scenario: Missing Turnstile token
 
