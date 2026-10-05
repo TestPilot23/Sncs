@@ -67,12 +67,11 @@ before each commit. Check in with the user at the end of each phase.
 
 ## 5. Phase 5 — Release pipeline
 
-- [ ] 5.1 Pipeline steps as scripts under `scripts/` (build, plan-guard, deploy, smoke) so they can run
+- [x] 5.1 (plan-guard, deploy order/cache headers and smoke are TypeScript with 42 mutation-checked tests; tf-plan/apply are bash) Pipeline steps as scripts under `scripts/` (build, plan-guard, deploy, smoke) so they can run
       locally if Actions is unavailable; tests for plan-guard against fixture plans (create, update,
       destroy, replace)
-- [ ] 5.2 Extend `ci.yml`: Lambda tests, `terraform fmt`/`validate`, plan on `infrastructure/` changes
-      with the plan role
-- [ ] 5.3 `release.yml`: verify → plan (+ guard) → approval via `production` environment → apply saved
+- [x] 5.2 (written; no plan on PRs because the repo is public and a plan needs the Cloudflare token, the real plan runs in the release workflow before approval) Extend `ci.yml`: Lambda tests, `terraform fmt`/`validate`/`test`
+- [x] 5.3 (written; saved plan travels via the private state bucket `plans/`, not artifacts, because artifacts on a public repo are world-readable; needs a bootstrap apply) `release.yml`: verify → plan (+ guard) → approval via `production` environment → apply saved
       plan → deploy (assets, rest, `index.html` last, invalidate `/index.html` and `/`) → smoke
 - [ ] 5.4 Configure GitHub: `production` environment with the owner as required reviewer, environment
       variable `VITE_TURNSTILE_SITE_KEY`, restrict who can push `release`

@@ -144,7 +144,7 @@ run "release_role_cannot_modify_ci_trust" {
   }
 }
 
-run "plan_role_cannot_write_anything_but_state_locks" {
+run "plan_role_cannot_write_anything_but_state_locks_and_saved_plans" {
   command = plan
 
   assert {
@@ -162,8 +162,54 @@ run "plan_role_cannot_write_anything_but_state_locks" {
     condition = alltrue([
       for s in jsondecode(aws_iam_role_policy.plan.policy).Statement :
       !contains(try(tolist(s.Action), [s.Action]), "s3:PutObject") ||
+      alltrue([for r in tolist(s.Resource) : endswith(r, ".tflock") || endswith(r, "/plans/*")])
+    ])
+    error_message = "Plan role may write only .tflock objects and saved plans in the state bucket."
+  }
+
+  assert {
+    condition = alltrue([
+      for s in jsondecode(aws_iam_role_policy.plan.policy).Statement :
+      !contains(try(tolist(s.Action), [s.Action]), "s3:DeleteObject") ||
       alltrue([for r in tolist(s.Resource) : endswith(r, ".tflock")])
     ])
-    error_message = "Plan role may write only .tflock objects in the state bucket."
+    error_message = "Plan role may delete only lock files, never a saved plan or state."
+  }
+}
+
+# The saved plan is what the approver reviewed. It lives in the private state bucket (a public
+# repo's artifacts are world-readable) and the release role may only read it.
+run "saved_plans_are_readable_by_release_but_not_writable" {
+  command = plan
+
+  assert {
+    condition = anytrue([
+      for s in jsondecode(aws_iam_role_policy.release.policy).Statement :
+      s.Effect == "Allow" &&
+      contains(try(tolist(s.Action), [s.Action]), "s3:GetObject") &&
+      anytrue([for r in tolist(s.Resource) : endswith(r, "/plans/*")])
+    ])
+    error_message = "Release role must be able to read saved plans."
+  }
+
+  assert {
+    condition = alltrue([
+      for s in jsondecode(aws_iam_role_policy.release.policy).Statement :
+      s.Effect == "Deny" || !anytrue([for r in tolist(s.Resource) : endswith(r, "/plans/*")]) ||
+      !contains(try(tolist(s.Action), [s.Action]), "s3:PutObject")
+    ])
+    error_message = "Release role must not be able to overwrite a saved plan."
+  }
+}
+
+run "saved_plans_expire" {
+  command = plan
+
+  assert {
+    condition = anytrue([
+      for r in aws_s3_bucket_lifecycle_configuration.state.rule :
+      r.status == "Enabled" && one(r.filter).prefix == "plans/" && one(r.expiration).days <= 14
+    ])
+    error_message = "Saved plans must expire within 14 days."
   }
 }

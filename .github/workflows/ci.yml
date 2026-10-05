@@ -28,6 +28,33 @@ jobs:
       - run: npm test
       - run: npm run build
 
+  # No credentials and no secrets: pull requests on a public repo can run this safely. The real
+  # `terraform plan` runs in the release workflow, where the approver can read it.
+  infrastructure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_wrapper: false
+      - run: npm ci --no-fund --no-audit
+      - run: npm run build:lambda
+      - run: terraform fmt -check -recursive infrastructure/terraform
+      - name: Validate and test each root
+        run: |
+          for root in bootstrap main; do
+            (cd infrastructure/terraform/$root &&
+              terraform init -backend=false -input=false >/dev/null &&
+              terraform validate &&
+              terraform test)
+          done
+      - run: infrastructure/tests/static-checks.sh
+
   docker:
     runs-on: ubuntu-latest
     timeout-minutes: 10

@@ -83,6 +83,24 @@ resource "aws_s3_bucket_lifecycle_configuration" "state" {
     }
   }
 
+  # Saved plans (plans/<run>/...) only matter between the plan step and the approved apply.
+  rule {
+    id     = "expire-saved-plans"
+    status = "Enabled"
+
+    filter {
+      prefix = "plans/"
+    }
+
+    expiration {
+      days = 7
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 1
+    }
+  }
+
   depends_on = [aws_s3_bucket_versioning.state]
 }
 
@@ -137,7 +155,8 @@ resource "aws_iam_role_policy_attachment" "plan" {
   policy_arn = each.value
 }
 
-# Read state, and write only the lock files S3-native locking creates next to it.
+# Read state, write only the lock files S3-native locking creates next to it, and save the plan
+# under plans/ for the release role to apply after approval.
 resource "aws_iam_role_policy" "plan" {
   name = "state-read-and-lock"
   role = aws_iam_role.plan.id
@@ -154,6 +173,11 @@ resource "aws_iam_role_policy" "plan" {
         Effect   = "Allow"
         Action   = ["s3:PutObject", "s3:DeleteObject"]
         Resource = ["${local.state_bucket_arn}/main/*.tflock"]
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["s3:PutObject"]
+        Resource = ["${local.state_bucket_arn}/plans/*"]
       },
     ]
   })
@@ -196,6 +220,12 @@ resource "aws_iam_role_policy" "release" {
         Effect   = "Allow"
         Action   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"]
         Resource = [local.state_bucket_arn, "${local.state_bucket_arn}/main/*"]
+      },
+      {
+        Sid      = "ReadSavedPlan"
+        Effect   = "Allow"
+        Action   = ["s3:GetObject"]
+        Resource = ["${local.state_bucket_arn}/plans/*"]
       },
       {
         Sid      = "SiteBucket"
