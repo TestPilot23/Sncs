@@ -17,10 +17,10 @@ before each commit. Check in with the user at the end of each phase.
 
 ## 2. Phase 2 — Terraform bootstrap and hosting stack
 
-- [ ] 2.1 Add `infrastructure/` skeleton, `.gitignore` entries for `.env` and state, README
-- [ ] 2.2 Bootstrap root: state bucket (versioned, encrypted, public access blocked, `use_lockfile`),
+- [x] 2.1 Add `infrastructure/` skeleton, `.gitignore` entries for `.env` and state, README
+- [x] 2.2 Bootstrap root: state bucket (versioned, encrypted, public access blocked, `use_lockfile`),
       GitHub OIDC provider, `sncs-gha-plan` and `sncs-gha-release` roles with dual-format trust
-- [ ] 2.3 Write the plan-assertion tests (no WAF, no public bucket policy, no `*` principal, no apex
+- [ ] 2.3 (bootstrap tests done, mutation-checked; main-root tests wait for 2.4) Write the plan-assertion tests (no WAF, no public bucket policy, no `*` principal, no apex
       MX/TXT managed, no `AdministratorAccess`) and see them fail against an empty root
 - [ ] 2.4 Main root: private S3 bucket with versioning and 30-day noncurrent expiry, OAC, CloudFront
       distribution, custom error response, response headers policy
