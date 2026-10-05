@@ -27,18 +27,18 @@ cd terraform/bootstrap && terraform init -backend=false && terraform test
 The AWS provider is mocked. Tests assert security properties (who can assume which role, what is denied,
 nothing public), not the HCL text.
 
-## Bootstrap (once)
+## Bootstrap (done 2026-10-05)
 
 ```
 cd terraform/bootstrap
-terraform init
+terraform init -backend-config="bucket=sncs-tfstate-568402999432" -backend-config="region=us-east-1"
 terraform plan -var github_org=TestPilot23 -var github_repo=Sncs -out=bootstrap.tfplan
 terraform apply bootstrap.tfplan
 ```
 
-Bootstrap state starts local (the bucket it creates cannot hold its own state yet). After the first apply,
-migrate it into the new bucket under key `bootstrap/terraform.tfstate` and delete the local file. The CI
-roles cannot read that key.
+The first apply ran with local state, which was then migrated into the bucket under
+`bootstrap/terraform.tfstate`. The CI roles can only read and lock `main/*`, so they cannot see or alter
+it. Changes to this root are always made by an operator, never by the pipeline.
 
 ## Main root
 
