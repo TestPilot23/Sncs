@@ -46,7 +46,7 @@ before each commit. Check in with the user at the end of each phase.
       remove the "demo form" disclaimer; keep Material 3 styling and the existing look
 - [x] 3.7 Terraform: HTTP API, Lambda (reserved concurrency only when the quota allows; account limit is 10 so it is unset, log retention), `/api/*` CloudFront behavior,
       stage throttling, SSM parameter with placeholder value and `ignore_changes`
-- [ ] 3.8 `npm run lint`, format, full test suite, build; commit
+- [x] 3.8 `npm run lint`, format, full test suite, build; commit
 
 ## 4. Phase 4 — Email identity, alarms and Cloudflare
 
