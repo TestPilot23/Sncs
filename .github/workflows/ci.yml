@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+      - run: npm ci --no-fund --no-audit
+      - run: npm run lint
+      - run: npm run format -- --check
+      - run: npm test
+      - run: npm run build
+
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build image and smoke-test nginx
+        run: |
+          docker build -t sncs:ci .
+          docker run -d --name sncs-ci -p 8087:80 sncs:ci
+          for i in $(seq 1 15); do curl -sf http://localhost:8087/ >/dev/null && break; sleep 1; done
+          curl -sf http://localhost:8087/ | grep -q '<div id="root">'
+          curl -sf http://localhost:8087/some/deep/path >/dev/null
