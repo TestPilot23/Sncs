@@ -115,11 +115,12 @@ change.
 ### 5. Email: SES domain identity, two messages, no storage
 
 Sending identity is the domain `stitchesncolorstudio.com` with Easy DKIM (3 CNAMEs, DNS-only) and a
-custom MAIL FROM subdomain `mail.stitchesncolorstudio.com` (its own MX and SPF TXT). The subdomain gives
+custom MAIL FROM subdomain `bounce.stitchesncolorstudio.com` (its own MX and SPF TXT). The subdomain gives
 SPF alignment for SES without editing the apex SPF, which the existing mailbox provider owns. Apex MX
-and apex SPF are not touched. DMARC: discovery task first (`dig TXT _dmarc.stitchesncolorstudio.com`). If
-none exists, publishing `p=none` is safe and optional; if one exists, confirm SES mail aligns with it.
-Enforcement (`quarantine`/`reject`) is out of scope.
+and apex SPF are not touched. Discovery (2026-10-05, `plan/dns-baseline.md`): mail is Google Workspace, SPF is
+`include:_spf.google.com`, and DMARC already exists as `p=quarantine; sp=reject`. The `mail.` name is
+already a CNAME to Google webmail, which is why the MAIL FROM subdomain is `bounce.`. SES mail is From
+the apex, so DMARC passes through DKIM alignment with Easy DKIM; no DMARC record is added or changed.
 
 Messages, sent from `quotes@stitchesncolorstudio.com` with display name "Stitches-n-Color Studio":
 
@@ -205,8 +206,11 @@ Everything is built and verified on the raw `*.cloudfront.net` domain first, and
 SES DKIM records are created ahead of time because they do not affect live traffic. Verification on the
 real hostname before DNS changes uses `curl --resolve` against a CloudFront edge IP.
 
-Cutover is a single Cloudflare record change (apex target → CloudFront, proxied). Reverting is the
-reverse single edit and Forky still serves, so rollback is minutes. After the user confirms the live
+Cutover replaces the apex record: today it is a proxied `A` to a home IP (no tunnel), and an `A` cannot
+become a `CNAME` in place, so it is delete-then-create with a gap of seconds. The pipeline destroy guard
+refuses this, so an operator performs it, with a saved plan. Reverting recreates the original `A`
+(recorded in `plan/dns-baseline.md`); Forky still serves, so rollback is minutes. The wildcard `*` record
+also points at Forky and is left alone. After the user confirms the live
 site and a real form submission (owner mail and auto-reply both arrive), the Forky retirement is
 done in the same session per the user's instruction: stop and remove `Sncs-Web`, remove its Traefik
 labels and the compose entry, remove the local image. The WordPress database dump and old volumes under
@@ -262,9 +266,8 @@ pre-authorized by this document.
 ## Open Questions
 
 1. Who receives quote requests (address or list)? Needed before the first email test.
-2. What provider hosts the existing `@stitchesncolorstudio.com` mailboxes, and is there a DMARC record?
-   (Discovery task; affects only whether we publish a DMARC record.)
-3. Is the Cloudflare plan the Free plan, and is the Turnstile widget created under the same account?
+2. ~~Mail provider / DMARC~~ Answered: Google Workspace, DMARC `p=quarantine` already present.
+3. ~~Cloudflare plan~~ Answered: Free. Still open: is the Turnstile widget created under the same account?
 4. What local AWS profile or SSO login should be used for account 568402999432? None of the five
    existing profiles maps to it.
 5. Is `www.stitchesncolorstudio.com` currently in use, and should it redirect to the apex?

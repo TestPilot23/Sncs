@@ -159,7 +159,7 @@ email address. Logs SHALL contain the request id, service, outcome and error cla
 ### Requirement: The Domain Is a Verified SES Sender Without Disturbing Existing Mail
 
 `stitchesncolorstudio.com` SHALL be verified as an SES domain identity with Easy DKIM and a custom MAIL
-FROM subdomain `mail.stitchesncolorstudio.com` that carries its own MX and SPF records. The DKIM and MAIL
+FROM subdomain `bounce.stitchesncolorstudio.com` that carries its own MX and SPF records. The DKIM and MAIL
 FROM records SHALL be created by Terraform in the Cloudflare zone. The sender address SHALL be configured
 separately from the verified identity. An SES configuration set SHALL record bounces and complaints.
 

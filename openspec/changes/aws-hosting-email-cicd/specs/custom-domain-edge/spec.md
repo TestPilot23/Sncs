@@ -90,9 +90,9 @@ this one zone. The local file that holds it SHALL be git-ignored.
 
 ### Requirement: Cutover Is a Single Reversible Record Change
 
-Moving live traffic from Forky to CloudFront SHALL be one change to the apex record, performed only
+Moving live traffic from Forky to CloudFront SHALL be one operator-run change that replaces the apex `A` record with a proxied CNAME to CloudFront, performed only
 after the site and contact form are verified on the CloudFront domain. Forky SHALL keep serving until
-that change, so reverting is the same single edit.
+that change, so reverting is recreating the original apex `A` record recorded in `plan/dns-baseline.md`.
 
 #### Scenario: Verified before cutover
 
@@ -102,7 +102,7 @@ that change, so reverting is the same single edit.
 #### Scenario: Revert
 
 - **WHEN** the live site misbehaves after cutover and Forky has not been retired
-- **THEN** restoring the previous apex record returns traffic to Forky
+- **THEN** recreating the recorded apex `A` record returns traffic to Forky
 
 ### Requirement: Forky Is Retired After Live Verification
 

@@ -5,9 +5,9 @@ before each commit. Check in with the user at the end of each phase.
 
 - [ ] 1.1 User configures an AWS CLI profile (SSO or admin user with MFA) for account 568402999432 and
       confirms with `aws sts get-caller-identity`; enable root MFA and a cost budget alarm
-- [ ] 1.2 User answers Open Questions 1–6 in `design.md` (quote recipients, mail provider, Cloudflare
+- [ ] 1.2 (mail provider, DMARC, Cloudflare plan answered 2026-10-05) User answers the rest of Open Questions 1–6 in `design.md` (quote recipients, mail provider, Cloudflare
       plan, www usage, repo visibility)
-- [ ] 1.3 Discovery (read-only): `dig` NS/MX/TXT/`_dmarc` for the domain, list current Cloudflare records,
+- [x] 1.3 Discovery (read-only): `dig` NS/MX/TXT/`_dmarc` for the domain, list current Cloudflare records,
       and record how apex traffic reaches Forky today; save the output to `plan/dns-baseline.md`
 - [ ] 1.4 User files the SES production-access request in `us-east-1` (use case: transactional replies to
       a website quote form) and verifies the owner address meanwhile
@@ -50,7 +50,7 @@ before each commit. Check in with the user at the end of each phase.
 
 ## 4. Phase 4 — Email identity, alarms and Cloudflare
 
-- [ ] 4.1 Terraform: SES domain identity, Easy DKIM, custom MAIL FROM, configuration set, with all
+- [ ] 4.1 Terraform: SES domain identity, Easy DKIM, custom MAIL FROM on `bounce.` (not `mail.`, which is a Google CNAME), configuration set, with all
       records created in the Cloudflare zone (DNS-only); confirm the plan changes no apex MX/TXT
 - [ ] 4.2 Terraform: ACM certificate with Cloudflare validation records; attach the alias only after
       issuance; do not create the apex record yet
@@ -85,7 +85,7 @@ before each commit. Check in with the user at the end of each phase.
 
 - [ ] 6.1 Final pre-cutover checks on the CloudFront domain and via `curl --resolve` for the real
       hostname: site, hashed asset header, deep path, `/api/contact` invalid body → 400
-- [ ] 6.2 Note the current apex record exactly (value, proxied flag) for revert
+- [ ] 6.2 Confirm the apex `A` record still matches `plan/dns-baseline.md` (value, proxied flag) for revert
 - [ ] 6.3 Cutover: change the apex record to the CloudFront domain, proxied (Terraform apply or one edit)
 - [ ] 6.4 Verify on the real hostname: HTTPS, cache headers, `www` redirect, scanner path → 403, one real
       form submission with both emails; user confirms
