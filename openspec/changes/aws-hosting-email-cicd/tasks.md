@@ -73,7 +73,7 @@ before each commit. Check in with the user at the end of each phase.
 - [x] 5.2 (written; no plan on PRs because the repo is public and a plan needs the Cloudflare token, the real plan runs in the release workflow before approval) Extend `ci.yml`: Lambda tests, `terraform fmt`/`validate`/`test`
 - [x] 5.3 (written; saved plan travels via the private state bucket `plans/`, not artifacts, because artifacts on a public repo are world-readable; needs a bootstrap apply) `release.yml`: verify → plan (+ guard) → approval via `production` environment → apply saved
       plan → deploy (assets, rest, `index.html` last, invalidate `/index.html` and `/`) → smoke
-- [ ] 5.4 Configure GitHub: `production` environment with the owner as required reviewer, environment
+- [x] 5.4 (done 2026-10-05: bootstrap applied for plans/ access; envs production (owner reviewer) and release-plan, both limited to the release branch; token secret in both; site key variable in production; ruleset 24528591 locks release to the admin) Configure GitHub: `production` environment with the owner as required reviewer, environment
       variable `VITE_TURNSTILE_SITE_KEY`, restrict who can push `release`
 - [ ] 5.5 Dry run: push the feature branch to `release` (user runs the push), review the plan, approve,
       confirm smoke checks pass on the CloudFront domain
