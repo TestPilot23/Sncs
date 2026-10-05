@@ -80,7 +80,7 @@ data "archive_file" "contact" {
 resource "aws_lambda_function" "contact" {
   function_name = local.contact_name
   role          = aws_iam_role.contact.arn
-  runtime       = "nodejs24.x"
+  runtime       = "nodejs26.x"
   architectures = ["arm64"]
   handler       = "index.handler"
   memory_size   = 256

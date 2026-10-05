@@ -87,8 +87,8 @@ function URLs behind CloudFront OAC were considered (one fewer service) but POST
 payload-hash header the browser cannot produce; HTTP API costs about $1 per million requests, which is
 irrelevant here, and avoids that failure mode.
 
-- Runtime: Node.js on the latest Lambda runtime available at implementation time (expected `nodejs24.x`;
-  verify), arm64, bundled with esbuild into one file in CI and zipped by Terraform.
+- Runtime: Node.js on the latest Lambda runtime available at implementation time (`nodejs26.x`, confirmed accepted by Lambda 2026-10-05, matching the repo's Node 26),
+  arm64, bundled with esbuild into one file in CI and zipped by Terraform.
 - Language: TypeScript. The request type and field limits live in one file imported by both the React
   form and the handler by relative path (no package; Coding Defaults). This is the only code shared and
   it prevents the client and server validators drifting.
