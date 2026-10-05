@@ -12,8 +12,8 @@ variable "domain" {
 
 variable "owner_emails" {
   type        = list(string)
-  description = "Addresses that receive quote requests. Empty makes the form fail loudly (502) rather than lose leads silently."
-  default     = []
+  description = "Addresses that receive quote requests. Each must exist as a mailbox, alias or group at the mail provider, or the request bounces and the lead is lost. Empty makes the form fail loudly (502)."
+  default     = ["quotes@stitchesncolorstudio.com"]
 }
 
 variable "shop_phone" {
