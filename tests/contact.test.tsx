@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Contact, Faq } from '../src/pages/Contact';
@@ -31,6 +31,21 @@ describe('Contact form validation', () => {
     expect(screen.queryByText(/thanks — we got it/i)).not.toBeInTheDocument();
   });
 
+  beforeEach(() => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({ ok: true, status: 200, json: async () => ({ ok: true }) })),
+    );
+  });
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('does not send anything when validation fails', async () => {
+    const user = userEvent.setup();
+    render(<Contact />);
+    await user.click(screen.getByRole('button', { name: /send my request/i }));
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it('shows the confirmation once a valid request is submitted', async () => {
     const user = userEvent.setup();
     render(<Contact />);
@@ -39,7 +54,7 @@ describe('Contact form validation', () => {
     await user.selectOptions(screen.getByLabelText(/^service/i), 'Screen Printing');
     await user.type(screen.getByLabelText(/project details/i), 'Team hoodies for spring league');
     await user.click(screen.getByRole('button', { name: /send my request/i }));
-    expect(screen.getByText(/thanks — we got it/i)).toBeInTheDocument();
+    expect(await screen.findByText(/thanks — we got it/i)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /send my request/i })).not.toBeInTheDocument();
   });
 });

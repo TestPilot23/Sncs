@@ -18,10 +18,10 @@ production Vite + React + TS static site.
 ## Phase 2 — Candidates (not started, discuss first)
 
 - [ ] Real gallery photos to replace striped placeholders
-- [ ] Contact form backend (email or quote-intake endpoint)
-- [x] Dockerize (multi-stage build → nginx:alpine, compose on port 8087)
-- [x] Deploy to Forky (2026-07-03): replaced Sncs WordPress stack; Traefik routes
+- [x] Contact form backend (2026-10-05: Lambda + SES, see claude.md)
+- [x] Dockerize (multi-stage build → nginx:alpine, compose on port 8087) — SUPERSEDED by AWS hosting
+- [x] Deploy to Forky (2026-07-03, RETIRED 2026-10-05, now S3 + CloudFront): replaced Sncs WordPress stack; Traefik routed
       stitchesncolorstudio.com → Sncs-Web container; WP DB dumped to
       `~/docker/websites/Sncs/wordpress-backup/`, all old data/volumes retained
-- [ ] CI to rebuild/redeploy image on release
+- [x] CI to deploy on release (2026-10-05: GitHub Actions OIDC pipeline, see claude.md)
 - [ ] Self-host fonts if we want to drop the Google Fonts CDN

@@ -1,0 +1,115 @@
+name: Release
+
+# A push to `release` runs: verify -> plan (+ guard) -> approval (production environment) ->
+# apply the saved plan -> deploy -> smoke. Only the owner pushes `release` (branch ruleset).
+on:
+  push:
+    branches: [release]
+
+permissions:
+  contents: read
+
+# Never cancel a release mid-apply.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-1
+  STATE_BUCKET: sncs-tfstate-568402999432
+  PLAN_ROLE_ARN: arn:aws:iam::568402999432:role/sncs-gha-plan
+  RELEASE_ROLE_ARN: arn:aws:iam::568402999432:role/sncs-gha-release
+  PLAN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+      - run: npm ci --no-fund --no-audit
+      - run: npm run lint
+      - run: npm run format -- --check
+      - run: npm test
+      - run: npm run build
+
+  plan:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # holds the Cloudflare token for planning; restricted to the `release` branch
+    environment: release-plan
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+      - run: npm ci --no-fund --no-audit
+      - run: npm run build:lambda
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_wrapper: false
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.PLAN_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - run: scripts/tf-plan.sh
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - name: Show the plan to the approver
+        if: always()
+        run: |
+          f=infrastructure/terraform/main/release.plan.txt
+          [ -f "$f" ] || exit 0
+          { echo '## Terraform plan'; echo '```'; sed 's/\x1b\[[0-9;]*m//g' "$f" | tail -n 400; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+  release:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # the owner approves here; the release role can only be assumed from this environment
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+      - run: npm ci --no-fund --no-audit
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_wrapper: false
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.RELEASE_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Apply the approved plan
+        run: scripts/tf-apply.sh
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - run: scripts/read-outputs.sh >> "$GITHUB_ENV"
+      - name: Build the site
+        # without the site key the form ships with no Turnstile widget and every send is rejected
+        run: |
+          test -n "$VITE_TURNSTILE_SITE_KEY" || { echo "VITE_TURNSTILE_SITE_KEY is not set in the production environment"; exit 1; }
+          npm run build
+        env:
+          VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY }}
+      - name: Deploy
+        run: node scripts/deploy.ts
+      - name: Smoke checks
+        # SMOKE_URL moves to the real domain at cutover; until then the CloudFront domain is checked
+        run: node scripts/smoke.ts "${SMOKE_URL:-https://$DISTRIBUTION_DOMAIN}"
+        env:
+          SMOKE_URL: ${{ vars.SMOKE_URL }}

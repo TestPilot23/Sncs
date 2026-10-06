@@ -1,32 +1,25 @@
-# React + TypeScript + Vite
+# Stitches-n-Color Studio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Marketing site for Stitches-n-Color Embroidery Studio: Vite 8, React 19 and TypeScript, with a
+contact-form Lambda and Terraform-managed AWS hosting.
 
-Currently, two official plugins are available:
+- Live: https://stitchesncolorstudio.com
+- Project notes, layout and conventions: [`claude.md`](claude.md)
+- Infrastructure (Terraform, bootstrap, tests): [`infrastructure/README.md`](infrastructure/README.md)
+- Design and decisions: `openspec/`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Develop
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```sh
+npm install
+npm run dev      # dev server
+npm test         # full regression suite
+npm run lint     # oxlint
+npm run build    # typecheck + production build
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Release
+
+Push to the `release` branch. GitHub Actions verifies, plans, waits for approval in the `production`
+environment, then applies, deploys to S3/CloudFront and smoke-tests the live site. To roll back,
+release the previous good commit the same way. Details are in `claude.md`.

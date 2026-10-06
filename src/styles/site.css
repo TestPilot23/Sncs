@@ -948,6 +948,30 @@ p {
 .field.bad .err {
   display: block;
 }
+.hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.form-alert {
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #fde8e6;
+  color: #8c1d18;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+.form-alert a {
+  color: inherit;
+  text-decoration: underline;
+}
+.form .btn:disabled {
+  opacity: 0.65;
+  cursor: progress;
+}
 .two {
   display: grid;
   grid-template-columns: 1fr 1fr;
