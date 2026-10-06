@@ -86,11 +86,11 @@ before each commit. Check in with the user at the end of each phase.
       hostname: site, hashed asset header, deep path, `/api/contact` invalid body → 400
 - [x] 6.2 (matched baseline 2026-10-05) Confirm the apex `A` record still matches `plan/dns-baseline.md` (value, proxied flag) for revert
 - [x] 6.3 (done 2026-10-05 by one Cloudflare API PUT on the apex record, A to proxied CNAME duvf4vsqh9386.cloudfront.net; SMOKE_URL variable set to the real domain; revert = A 99.26.214.190 proxied) Cutover: change the apex record to the CloudFront domain, proxied (Terraform apply or one edit)
-- [ ] 6.4 Verify on the real hostname: HTTPS, cache headers, `www` redirect, scanner path → 403, one real
+- [x] 6.4 (verified 2026-10-05, owner email arrived; auto-reply waits on SES production access) Verify on the real hostname: HTTPS, cache headers, `www` redirect, scanner path → 403, one real
       form submission with both emails; user confirms
-- [ ] 6.5 With explicit user confirmation at that moment: stop and remove the Forky `Sncs-Web` container,
+- [x] 6.5 (done 2026-10-05: container, image tags removed; compose kept as docker-compose.yml.retired-20261005 in ~/dockerContainers/websites/Sncs; ~/docker/websites/Sncs untouched) With explicit user confirmation at that moment: stop and remove the Forky `Sncs-Web` container,
       Traefik labels, compose entry and local image; leave `~/docker/websites/Sncs/` untouched
-- [ ] 6.6 Confirm the site still serves and the existing `@stitchesncolorstudio.com` mailboxes still
+- [x] 6.6 (site 200, Google MX records unchanged; mailbox delivery not exercised) Confirm the site still serves and the existing `@stitchesncolorstudio.com` mailboxes still
       receive mail
 
 ## 7. Phase 7 — Wrap-up
