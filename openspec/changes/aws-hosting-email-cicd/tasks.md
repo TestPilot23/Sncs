@@ -3,9 +3,9 @@ before each commit. Check in with the user at the end of each phase.
 
 ## 1. Phase 1 — Prerequisites and discovery (operator + read-only)
 
-- [ ] 1.1 User configures an AWS CLI profile (SSO or admin user with MFA) for account 568402999432 and
+- [x] 1.1 User configures an AWS CLI profile (SSO or admin user with MFA) for account 568402999432 and
       confirms with `aws sts get-caller-identity`; enable root MFA and a cost budget alarm
-- [ ] 1.2 (mail provider, DMARC, Cloudflare plan answered 2026-10-05) User answers the rest of Open Questions 1–6 in `design.md` (quote recipients, mail provider, Cloudflare
+- [x] 1.2 (mail provider, DMARC, Cloudflare plan answered 2026-10-05) User answers the rest of Open Questions 1–6 in `design.md` (quote recipients, mail provider, Cloudflare
       plan, www usage, repo visibility)
 - [x] 1.3 Discovery (read-only): `dig` NS/MX/TXT/`_dmarc` for the domain, list current Cloudflare records,
       and record how apex traffic reaches Forky today; save the output to `plan/dns-baseline.md`
@@ -13,7 +13,7 @@ before each commit. Check in with the user at the end of each phase.
       a website quote form) and verifies the owner address meanwhile
 - [x] 1.5 (Cloudflare token done and verified 2026-10-05: one zone only, DNS+WAF+Settings+Single Redirect Edit; Turnstile widget `sncs-contact` created 2026-10-05, site key 0x4AAAAAAFOlv7DmaStSQxTF (public); secret goes in infrastructure/.env as TURNSTILE_SECRET then SSM after the Phase 3 apply) User creates a scoped Cloudflare API token (Zone DNS edit, Zone Rulesets edit, this zone only)
       and a Turnstile widget; token goes in git-ignored `infrastructure/.env`
-- [ ] 1.6 Record the baseline cache-header behavior of the live Forky site for parity checks later
+- [x] 1.6 (N/A 2026-10-05: Forky container retired at cutover, baseline can no longer be captured) Record the baseline cache-header behavior of the live Forky site for parity checks later
 
 ## 2. Phase 2 — Terraform bootstrap and hosting stack
 
