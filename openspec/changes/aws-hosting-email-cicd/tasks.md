@@ -82,10 +82,10 @@ before each commit. Check in with the user at the end of each phase.
 
 ## 6. Phase 6 — Cutover and retirement
 
-- [ ] 6.1 Final pre-cutover checks on the CloudFront domain and via `curl --resolve` for the real
+- [x] 6.1 (passed 2026-10-05) Final pre-cutover checks on the CloudFront domain and via `curl --resolve` for the real
       hostname: site, hashed asset header, deep path, `/api/contact` invalid body → 400
-- [ ] 6.2 Confirm the apex `A` record still matches `plan/dns-baseline.md` (value, proxied flag) for revert
-- [ ] 6.3 Cutover: change the apex record to the CloudFront domain, proxied (Terraform apply or one edit)
+- [x] 6.2 (matched baseline 2026-10-05) Confirm the apex `A` record still matches `plan/dns-baseline.md` (value, proxied flag) for revert
+- [x] 6.3 (done 2026-10-05 by one Cloudflare API PUT on the apex record, A to proxied CNAME duvf4vsqh9386.cloudfront.net; SMOKE_URL variable set to the real domain; revert = A 99.26.214.190 proxied) Cutover: change the apex record to the CloudFront domain, proxied (Terraform apply or one edit)
 - [ ] 6.4 Verify on the real hostname: HTTPS, cache headers, `www` redirect, scanner path → 403, one real
       form submission with both emails; user confirms
 - [ ] 6.5 With explicit user confirmation at that moment: stop and remove the Forky `Sncs-Web` container,
