@@ -77,7 +77,7 @@ before each commit. Check in with the user at the end of each phase.
       variable `VITE_TURNSTILE_SITE_KEY`, restrict who can push `release`
 - [x] 5.5 (run 37369511790 on 2026-10-05: verify, plan 0/1/0, owner approval, apply, deploy and smoke all green; independently re-checked on duvf4vsqh9386.cloudfront.net; GitHub Actions outage caused two stalled attempts before) Dry run: push the feature branch to `release` (user runs the push), review the plan, approve,
       confirm smoke checks pass on the CloudFront domain
-- [ ] 5.6 Prove a denied path: assume the release role from a non-`production` context and confirm denial
+- [x] 5.6 (run 37396527849 on a throwaway branch: release role refused with Not authorized to perform sts:AssumeRoleWithWebIdentity, plan role control worked and could not write; branch deleted) Prove a denied path: assume the release role from a non-`production` context and confirm denial
 - [ ] 5.7 Prove rollback: release the previous commit and confirm the older build serves
 
 ## 6. Phase 6 — Cutover and retirement
