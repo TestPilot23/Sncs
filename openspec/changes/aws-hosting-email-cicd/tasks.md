@@ -95,8 +95,8 @@ before each commit. Check in with the user at the end of each phase.
 
 ## 7. Phase 7 — Wrap-up
 
-- [ ] 7.1 Update `claude.md`, `README.md` and `plan/plan.md`: hosting, pipeline, rollback, secrets
+- [x] 7.1 (done 2026-10-05; README rewritten, claude.md and plan.md updated) Update `claude.md`, `README.md` and `plan/plan.md`: hosting, pipeline, rollback, secrets
       locations, Cloudflare manual steps, cost; mark the superseded Docker/Forky notes
-- [ ] 7.2 Add dependabot coverage for `infrastructure/` (Terraform providers) and `lambda/contact/`
+- [x] 7.2 (Terraform bootstrap and main added; lambda/contact has no package.json, its deps are in the root one the npm entry already covers) Add dependabot coverage for `infrastructure/` (Terraform providers) and `lambda/contact/`
 - [ ] 7.3 Open the PR to `main` only after the release is live and verified; run `/opsx:archive`
 - [ ] 7.4 Update project memory with the final state and gotchas found
