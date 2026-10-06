@@ -75,7 +75,7 @@ before each commit. Check in with the user at the end of each phase.
       plan → deploy (assets, rest, `index.html` last, invalidate `/index.html` and `/`) → smoke
 - [x] 5.4 (done 2026-10-05: bootstrap applied for plans/ access; envs production (owner reviewer) and release-plan, both limited to the release branch; token secret in both; site key variable in production; ruleset 24528591 locks release to the admin) Configure GitHub: `production` environment with the owner as required reviewer, environment
       variable `VITE_TURNSTILE_SITE_KEY`, restrict who can push `release`
-- [ ] 5.5 Dry run: push the feature branch to `release` (user runs the push), review the plan, approve,
+- [x] 5.5 (run 37369511790 on 2026-10-05: verify, plan 0/1/0, owner approval, apply, deploy and smoke all green; independently re-checked on duvf4vsqh9386.cloudfront.net; GitHub Actions outage caused two stalled attempts before) Dry run: push the feature branch to `release` (user runs the push), review the plan, approve,
       confirm smoke checks pass on the CloudFront domain
 - [ ] 5.6 Prove a denied path: assume the release role from a non-`production` context and confirm denial
 - [ ] 5.7 Prove rollback: release the previous commit and confirm the older build serves
