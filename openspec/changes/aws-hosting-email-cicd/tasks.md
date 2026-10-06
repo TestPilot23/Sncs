@@ -58,7 +58,7 @@ before each commit. Check in with the user at the end of each phase.
 - [x] 4.4 (applied and live-verified: www 301, scanner paths 403, US-only rule kept) Terraform: Cloudflare Managed Ruleset, rate-limit rule, scanner-path rule, `www` redirect,
       Full (strict); document any rule the free plan cannot manage, with a verification command
 - [x] 4.5 (done 2026-10-05 after the Phase 3 apply: version 2, length verified, not in state) Operator sets the Turnstile secret with `aws ssm put-parameter`; confirm it is absent from state
-- [ ] 4.6 (DKIM and MAIL FROM verified SUCCESS 2026-10-05; SES production access still PENDING) Apply; verify DKIM and MAIL FROM report SUCCESS; confirm the SES production request is granted
+- [ ] 4.6 (DKIM and MAIL FROM verified SUCCESS 2026-10-05; SES case 179122544900542: AWS asked for more info, user replied 2026-10-05, awaiting a decision; the API status still reads DENIED) Apply; verify DKIM and MAIL FROM report SUCCESS; confirm the SES production request is granted
 - [x] 4.7 (done 2026-10-05, all three simulator sends accepted) SES mailbox-simulator sends (`success@`, `bounce@`, `complaint@`) through the handler path
 - [ ] 4.8 One real submission through the CloudFront domain; confirm owner mail and customer auto-reply
       both arrive and render correctly
