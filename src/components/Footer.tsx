@@ -4,6 +4,8 @@ import { Peek } from './Peek';
 import { NAV } from '../data/content';
 import { hashFor, navigate, type Route } from '../hooks/useHashRoute';
 
+const YEAR = new Date().getFullYear();
+
 export function Footer() {
   const go = (r: Route) => (e: MouseEvent) => {
     e.preventDefault();
@@ -79,9 +81,7 @@ export function Footer() {
           </div>
         </div>
         <div className="foot-bottom">
-          <span>
-            © {new Date().getFullYear()} Stitches-n-Color Embroidery Studio. All rights reserved.
-          </span>
+          <span>© {YEAR} Stitches-n-Color Embroidery Studio. All rights reserved.</span>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             Sewn with pride <Ic.heart width={14} height={14} style={{ color: 'var(--accent)' }} />{' '}
             in St. Louis
