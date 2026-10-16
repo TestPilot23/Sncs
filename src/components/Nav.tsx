@@ -6,13 +6,18 @@ import { NAV } from '../data/content';
 export function Nav({ route }: { route: Route }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  // close the menu on navigation by adjusting state during render rather than in an effect
+  const [seenRoute, setSeenRoute] = useState(route);
+  if (seenRoute !== route) {
+    setSeenRoute(route);
+    setOpen(false);
+  }
   useEffect(() => {
     const f = () => setScrolled(window.scrollY > 20);
     f();
     window.addEventListener('scroll', f, { passive: true });
     return () => window.removeEventListener('scroll', f);
   }, []);
-  useEffect(() => setOpen(false), [route]);
   const go = (r: Route) => (e: MouseEvent) => {
     e.preventDefault();
     navigate(r);
